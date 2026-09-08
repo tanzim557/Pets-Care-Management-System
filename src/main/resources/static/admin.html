@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=2025120403">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i class="fa-solid fa-shield-dog"></i> Admin Panel</div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showSection('overview')"><i class="fa-solid fa-chart-line"></i>
+                    Overview</button>
+                <button class="nav-item" onclick="showSection('doctors')"><i class="fa-solid fa-user-doctor"></i>
+                    Doctors</button>
+                <button class="nav-item" onclick="showSection('rescue')"><i class="fa-solid fa-truck-medical"></i>
+                    Rescue Team</button>
+                <button class="nav-item" onclick="showSection('shop')"><i class="fa-solid fa-shop"></i> Shop
+                    Items</button>
+                <button class="nav-item" onclick="showSection('treatments')"><i class="fa-solid fa-stethoscope"></i>
+                    Treatments</button>
+                <button class="nav-item" onclick="showSection('applications')"><i class="fa-solid fa-file-medical"></i>
+                    Applications</button>
+                <button class="nav-item" onclick="showSection('orders')"><i class="fa-solid fa-box"></i> Orders</button>
+                <button class="nav-item" onclick="showSection('adoption')"><i class="fa-solid fa-paw"></i>
+                    Adoption</button>
+                <button class="nav-item" onclick="showSection('donations')"><i
+                        class="fa-solid fa-hand-holding-dollar"></i>
+                    Donations</button>
+                <button class="nav-item" onclick="showSection('payment')"><i class="fa-solid fa-credit-card"></i>
+                    Payment Settings</button>
+                <div style="flex:1"></div>
+                <a href="/logout" class="nav-item" style="color: var(--danger);"><i
+                        class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <div id="overview" class="section active">
+                <div class="header-bar">
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <span class="badge badge-info">Live System Status</span>
+                    <span class="badge badge-success" style="margin-left:0.5rem;">v2025.12.04</span>
+                </div>
+                <div class="services" style="padding:0; gap:1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 2rem;">
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-users" style="color:#0ea5e9; background:#e0f2fe;"></i> Total Users</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #1e293b;" id="userCount">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-user-doctor" style="color:#2563eb; background:#dbeafe;"></i> Total Doctors</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #1e293b;" id="doctorCount">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-truck-medical" style="color:#ea580c; background:#ffedd5;"></i> Rescue Teams</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #1e293b;" id="rescueCount">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-heart-pulse" style="color:#059669; background:#d1fae5;"></i> Pets Recovered</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #1e293b;" id="recoveredCount">0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-hand-holding-dollar" style="color:#e11d48; background:#ffe4e6;"></i> Total Donations</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #e11d48;" id="donationCount">৳0</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3><i class="fa-solid fa-cart-shopping" style="color:#7c3aed; background:#ede9fe;"></i> Total Orders</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; color: #1e293b;" id="orderCount">0</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                    <div class="card" style="padding: 1.5rem; border-radius: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b;"><i class="fa-solid fa-clock-rotate-left"></i> Recent Orders</h3>
+                            <button class="btn-login" onclick="showSection('orders')" style="font-size: 0.85rem;">View All</button>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <tr><td colspan="4" class="text-center">Loading recent orders...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 1.5rem; border-radius: 1.25rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem;"><i class="fa-solid fa-bolt"></i> Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <button onclick="openModal('doctorModal')" class="nav-item" style="background: #f1f5f9; padding: 1rem; justify-content: center; font-weight: 600;"><i class="fa-solid fa-user-doctor"></i> Add Doctor</button>
+                            <button onclick="openModal('rescueModal')" class="nav-item" style="background: #f1f5f9; padding: 1rem; justify-content: center; font-weight: 600;"><i class="fa-solid fa-truck-medical"></i> Add Rescue Team</button>
+                            <button onclick="openModal('productModal')" class="nav-item" style="background: #f1f5f9; padding: 1rem; justify-content: center; font-weight: 600;"><i class="fa-solid fa-box-open"></i> Add Shop Product</button>
+                            <button onclick="showSection('applications')" class="nav-item" style="background: #f1f5f9; padding: 1rem; justify-content: center; font-weight: 600; color: #ef4444;"><i class="fa-solid fa-file-medical"></i> View Emergencies</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doctors Section -->
+            <div id="doctors" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Doctor Management</h1>
+                    <button onclick="openModal('doctorModal')" class="btn-primary"><i class="fa-solid fa-plus"></i> Add
+                        New Doctor</button>
+                </div>
+                <div class="services" id="doctorGrid" style="padding:0;">
+                    <!-- Doctor cards will go here -->
+                </div>
+            </div>
+
+            <!-- Rescue Section -->
+            <div id="rescue" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Rescue Team Management</h1>
+                    <button onclick="openModal('rescueModal')" class="btn-primary"><i class="fa-solid fa-plus"></i> Add
+                        Team Member</button>
+                </div>
+                <div class="services" id="rescueGrid" style="padding:0;">
+                    <!-- Rescue cards will go here -->
+                </div>
+            </div>
+
+            <!-- Shop Section -->
+            <div id="shop" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Shop Management</h1>
+                    <button onclick="openModal('productModal')" class="btn-primary"><i class="fa-solid fa-plus"></i> Add
+                        New Product</button>
+                </div>
+                <div class="card">
+                    <div class="card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminProductTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatments Section -->
+            <div id="treatments" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Live Treatment Oversight</h1>
+                    <button onclick="loadTreatments()" class="btn-login"><i class="fa-solid fa-rotate-right"></i>
+                        Refresh</button>
+                </div>
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Applicant</th>
+                                <th>Animal</th>
+                                <th>Assigned Doctor</th>
+                                <th>Status</th>
+                                <th>Last Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="treatmentTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Applications Section -->
+            <div id="applications" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Emergency Applications</h1>
+                    <button onclick="loadApplications()" class="btn-login"><i class="fa-solid fa-rotate-right"></i>
+                        Refresh</button>
+                </div>
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Applicant</th>
+                                <th>Phone</th>
+                                <th>Animal</th>
+                                <th>Description</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Section - LIST LAYOUT -->
+            <div id="orders" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">📦 Order Management</h1>
+                    <button onclick="loadOrdersNew()" class="btn-primary"><i class="fa-solid fa-rotate-right"></i>
+                        Refresh</button>
+                </div>
+                <div id="ordersContainer" style="display:flex; flex-direction:column; gap:1rem;">
+                    <!-- Orders will be loaded here as single rows -->
+                    <div style="text-align:center; padding:2rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i>
+                        <p>Loading orders...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adoption Section -->
+            <div id="adoption" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Adoption Management</h1>
+                    <button onclick="loadAdoptionData()" class="btn-login"><i class="fa-solid fa-rotate-right"></i>
+                        Refresh</button>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <h3><i class="fa-solid fa-file-signature"></i> Applications</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Pet Name</th>
+                                <th>Applicant</th>
+                                <th>Phone</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adoptionTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fa-solid fa-paw"></i> Adoptable Pets List</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adoptionPetsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Donations Section -->
+            <div id="donations" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title">Donation History</h1>
+                    <button onclick="loadDonations()" class="btn-login"><i class="fa-solid fa-rotate-right"></i>
+                        Refresh</button>
+                </div>
+                <div class="card">
+                    <div
+                        style="display:flex; gap:2rem; margin-bottom:2rem; padding:1rem; background:#fff1f2; border-radius:8px;">
+                        <div>
+                            <div style="font-size:0.9rem; color:#881337;">Total Collected</div>
+                            <div style="font-size:1.8rem; font-weight:700; color:#e11d48;" id="totalDonation">৳0</div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.9rem; color:#881337;">Total Donors</div>
+                            <div style="font-size:1.8rem; font-weight:700; color:#e11d48;" id="totalDonors">0</div>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Donor Name</th>
+                                <th>Phone</th>
+                                <th>Amount</th>
+                                <th>Purpose</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="donationsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payment Settings Section -->
+            <div id="payment" class="section" style="display:none;">
+                <div class="header-bar">
+                    <h1 class="page-title"><i class="fa-solid fa-credit-card"></i> Payment Gateway Settings</h1>
+                </div>
+                <div class="card" style="max-width: 600px;">
+                    <h2 class="mb-2">SSLCommerz Configuration</h2>
+                    <p class="text-muted mb-3">Configure your payment gateway credentials here. Use sandbox credentials
+                        for testing.</p>
+                    <form onsubmit="savePaymentSettings(event)">
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-store"></i> Store ID</label>
+                            <input type="text" name="storeId" id="storeId" required
+                                placeholder="Enter Store ID (e.g., testbox for sandbox)">
+                            <small class="text-muted">Your SSLCommerz Store ID</small>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-key"></i> Store Password</label>
+                            <input type="password" name="storePassword" id="storePassword" required
+                                placeholder="Enter Store Password">
+                            <small class="text-muted">Your SSLCommerz Store Password</small>
+                        </div>
+                        <div class="form-group">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                                <input type="checkbox" name="isLive" id="isLive">
+                                <span><i class="fa-solid fa-toggle-on"></i> Enable Live Mode</span>
+                            </label>
+                            <small class="text-muted">⚠️ Keep unchecked for Sandbox/Testing mode. Check only when ready
+                                for production.</small>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-save"></i>
+                            Save Settings</button>
+                    </form>
+
+                    <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 0.5rem;">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1rem;">📝 Sandbox Test Credentials</h3>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Store ID:</strong> testbox</p>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Password:</strong> qwerty</p>
+                        <p style="font-size: 0.875rem; margin: 0; color: var(--text-muted);">Use these credentials for
+                            testing in Sandbox mode.</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </main>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div id="doctorModal" class="modal">
+        <div class="login-box" style="max-width: 600px;">
+            <span class="close-modal" onclick="closeModal('doctorModal')">&times;</span>
+            <h2 class="mb-2"><i class="fa-solid fa-user-doctor"></i> Add New Doctor</h2>
+            <p class="text-muted mb-3">Fill in the details to add a new doctor</p>
+            <form onsubmit="addDoctor(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user"></i> First Name</label>
+                        <input type="text" name="firstName" required placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user"></i> Last Name</label>
+                        <input type="text" name="lastName" required placeholder="Enter last name">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-phone"></i> Phone Number</label>
+                        <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="[0-9]{11}">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-stethoscope"></i> Specialty (Animal Category)</label>
+                        <select name="specialty">
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Bird">Bird</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-map-marker-alt"></i> District</label>
+                    <select name="location" required>
+                        <option value="">Select District</option>
+                        <option value="Dhaka">Dhaka</option>
+                        <option value="Khulna">Khulna</option>
+                        <option value="Pabna">Pabna</option>
+                        <option value="Satkhira">Satkhira</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user-lock"></i> Username</label>
+                        <input type="text" name="username" required placeholder="Choose username">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-key"></i> Password</label>
+                        <input type="password" name="password" required placeholder="Choose password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-camera"></i> Profile Photo (Optional)</label>
+                    <input type="file" id="doctorPhoto" accept="image/jpeg, image/png">
+                    <small class="text-muted" style="display:block; margin-top:5px;">Upload a profile picture (JPG, PNG)</small>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width:100%"><i class="fa-solid fa-plus-circle"></i> Add Doctor</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Rescue Modal -->
+    <div id="rescueModal" class="modal">
+        <div class="login-box" style="max-width: 600px;">
+            <span class="close-modal" onclick="closeModal('rescueModal')">&times;</span>
+            <h2 class="mb-2"><i class="fa-solid fa-truck-medical"></i> Add Rescue Team Member</h2>
+            <p class="text-muted mb-3">Fill in the details to add a new member to the rescue team</p>
+            <form onsubmit="addRescue(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user"></i> First Name</label>
+                        <input type="text" name="firstName" required placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user"></i> Last Name</label>
+                        <input type="text" name="lastName" required placeholder="Enter last name">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> Phone Number</label>
+                    <input type="tel" name="phone" required placeholder="01XXXXXXXXX" pattern="[0-9]{11}">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-map-marker-alt"></i> District</label>
+                    <select name="location" required>
+                        <option value="">Select District</option>
+                        <option value="Dhaka">Dhaka</option>
+                        <option value="Khulna">Khulna</option>
+                        <option value="Pabna">Pabna</option>
+                        <option value="Satkhira">Satkhira</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user-lock"></i> Username</label>
+                        <input type="text" name="username" required placeholder="Choose username">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-key"></i> Password</label>
+                        <input type="password" name="password" required placeholder="Choose password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-camera"></i> Profile Photo (Optional)</label>
+                    <input type="file" id="rescuePhoto" accept="image/*">
+                    <small class="text-muted">Upload a profile picture (JPG, PNG)</small>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width:100%">
+                    <i class="fa-solid fa-plus-circle"></i> Add Team Member
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="login-box">
+            <span class="close-modal" onclick="closeModal('productModal')">&times;</span>
+            <h2 class="mb-2">Add Shop Product</h2>
+            <form onsubmit="addProduct(event)">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Food">Food</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Food">Food</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="quantity" value="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Price (BDT)</label>
+                    <input type="number" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" id="productImage" accept="image/*">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initial Load
+        loadStats();
+        loadOrders(); // Auto-load orders on page load
+        loadAdoptionData(); // Auto-load adoption data on page load
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (id === 'doctors') loadDoctors(); // We need to implement this API or use existing hack
+            if (id === 'rescue') loadRescueTeam();
+            if (id === 'shop') loadAdminProducts();
+            if (id === 'treatments') loadTreatments();
+            if (id === 'treatments') loadTreatments();
+            if (id === 'applications') loadApplications();
+            if (id === 'applications') loadApplications();
+            if (id === 'orders') loadOrdersNew();
+            if (id === 'donations') loadDonations();
+            if (id === 'payment') loadPaymentSettings();
+        }
+
+        function loadDonations() {
+            fetch('/api/donation/list')
+                .then(res => res.json())
+                .then(data => {
+                    // Sorting latest first
+                    data.sort((a, b) => b.id - a.id);
+
+                    // Calc Stats
+                    const total = data.filter(d => d.status === 'Successful').reduce((sum, d) => sum + d.amount, 0);
+                    document.getElementById('totalDonation').textContent = '৳' + total.toLocaleString();
+                    document.getElementById('totalDonors').textContent = data.length;
+
+                    const tbody = document.getElementById('donationsTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No donations found.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = data.map(d => `
+                        <tr>
+                            <td>#${d.id}</td>
+                            <td>${d.donorName}</td>
+                            <td>${d.phone}</td>
+                            <td style="font-weight:700; color:#e11d48;">৳${d.amount}</td>
+                            <td>${d.purpose || '-'}</td>
+                            <td>${d.date ? new Date(d.date).toLocaleDateString() : 'N/A'}</td>
+                            <td><span class="badge ${d.status === 'Successful' ? 'badge-success' : 'badge-warning'}">${d.status}</span></td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+
+        function loadPaymentSettings() {
+            fetch('/api/payment/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        document.getElementById('storeId').value = data.storeId || '';
+                        document.getElementById('storePassword').value = data.storePassword || '';
+                        document.getElementById('isLive').checked = data.live;
+                    }
+                });
+        }
+
+        function savePaymentSettings(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.isLive = document.getElementById('isLive').checked;
+
+            fetch('/api/payment/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert('Payment settings saved successfully!');
+                    } else {
+                        alert('Error saving settings.');
+                    }
+                });
+        }
+
+        function loadOrders() {
+            console.log('=== LOADING ORDERS - Version 2025-12-04-15:18 ===');
+            fetch('/api/admin/orders')
+                .then(res => res.json())
+                .then(data => {
+                    console.log(`Found ${data.length} orders:`, data);
+                    const tbody = document.getElementById('ordersTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="9" class="text-center">No orders found.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(o => {
+                        console.log(`Rendering order #${o.id}, status: ${o.status}, buttons: ALWAYS SHOWING`);
+                        return `
+                        <tr>
+                            <td><strong>#${o.id}</strong></td>
+                            <td>
+                                <div style="font-weight:500">${o.customerName}</div>
+                                <div style="font-size:0.85rem; color:var(--text-muted)">${o.phone}</div>
+                            </td>
+                            <td>${o.location}</td>
+                            <td>${JSON.parse(o.items || '[]').length} Items</td>
+                            <td style="font-weight:600">৳${o.totalAmount}</td>
+                            <td>
+                                <div style="font-size:0.9rem">${o.paymentMethod || 'COD'}</div>
+                                <span class="badge ${o.paymentStatus === 'Paid' ? 'badge-success' : (o.paymentStatus === 'Failed' ? 'badge-danger' : 'badge-warning')}">${o.paymentStatus || 'Pending'}</span>
+                            </td>
+                            <td><span class="badge ${getBadgeClass(o.status)}">${o.status}</span></td>
+                            <td>
+                                <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                    <button class="btn-login" style="padding:0.4rem 0.6rem; font-size:0.85rem; background:var(--primary-color);" onclick="viewOrder(${o.id})" title="View Details">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    <button class="btn-login" style="padding:0.4rem 0.6rem; font-size:0.85rem; background:#10b981;" onclick="approveOrder(${o.id}, '${o.phone}', '${o.customerName}')" title="Approve Order">
+                                        <i class="fa-solid fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn-login" style="padding:0.4rem 0.6rem; font-size:0.85rem; background:#ef4444;" onclick="rejectOrder(${o.id}, '${o.customerName}')" title="Reject Order">
+                                        <i class="fa-solid fa-xmark"></i> Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    }).join('');
+                    console.log('✓ Orders table rendered with buttons for ALL rows');
+                });
+        }
+
+        function getBadgeClass(status) {
+            if (!status) return 'badge-warning';
+            const s = status.toLowerCase();
+            if (s.includes('deliver')) return 'badge-success';
+            if (s.includes('reject') || s.includes('cancel') || s.includes('fail')) return 'badge-danger';
+            if (s.includes('out for')) return 'badge-info';
+            return 'badge-warning';
+        }
+
+        function approveOrder(orderId, phone, customerName) {
+            if (!confirm(`Approve order #${orderId} for ${customerName}? Customer will receive a delivery notification SMS.`)) {
+                return;
+            }
+
+            fetch(`/api/admin/orders/${orderId}/approve`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order approved! SMS sent to customer.');
+                        loadOrders(); // Reload orders table
+                    } else {
+                        alert('Failed to approve order: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => alert('Error approving order: ' + err.message));
+        }
+
+        function rejectOrder(orderId, customerName) {
+            if (!confirm(`Are you sure you want to REJECT order #${orderId} for ${customerName}? This cannot be undone.`)) {
+                return;
+            }
+
+            fetch(`/api/admin/orders/${orderId}/reject`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order rejected! SMS sent to customer.');
+                        loadOrders(); // Reload orders table
+                    } else {
+                        alert('Failed to reject order: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => alert('Error rejecting order: ' + err.message));
+        }
+
+        // NEW SINGLE-ROW ORDER LAYOUT
+        function loadOrdersNew() {
+            console.log('🔄 Loading orders - single row layout');
+            fetch('/api/admin/orders')
+                .then(res => res.json())
+                .then(orders => {
+                    console.log(`📦 ${orders.length} orders loaded`);
+                    const container = document.getElementById('ordersContainer');
+
+                    if (orders.length === 0) {
+                        container.innerHTML = '<div style="text-align:center;padding:3rem;background:white;border-radius:12px;"><i class="fa-solid fa-inbox" style="font-size:3rem;color:#cbd5e1;margin-bottom:1rem;"></i><h3>No Orders</h3><p>Orders will appear when customers make purchases.</p></div>';
+                        return;
+                    }
+
+                    // Sort by ID descending (latest first)
+                    orders.sort((a, b) => b.id - a.id);
+
+                    container.innerHTML = orders.map(o => {
+                        const items = JSON.parse(o.items || '[]');
+                        const statusBg = o.status === 'Delivered' ? '#10b981' : o.status === 'Rejected' ? '#ef4444' : o.status === 'Out for Delivery' ? '#3b82f6' : '#f59e0b';
+                        const payBg = o.paymentStatus === 'Paid' ? '#10b981' : '#f59e0b';
+
+                        // Determine action buttons based on status
+                        let actionButtons = '';
+                        if (o.status === 'Approved' || o.status === 'Out for Delivery') {
+                            actionButtons = '<span style="background:#10b981;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:600;"><i class="fa-solid fa-check-circle"></i> Approved</span>';
+                        } else if (o.status === 'Rejected') {
+                            actionButtons = '<span style="background:#ef4444;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:600;"><i class="fa-solid fa-times-circle"></i> Rejected</span>';
+                        } else {
+                            // Show action buttons for pending orders
+                            actionButtons = `
+                                <button class="btn-login" style="padding:0.6rem 1rem;background:#3b82f6;color:white;border:none;border-radius:6px;font-weight:600;margin-right:0.5rem;" onclick="viewOrder(${o.id})"><i class="fa-solid fa-eye"></i> View</button>
+                                <button class="btn-primary" style="padding:0.6rem 1rem;background:#10b981;color:white;border:none;border-radius:6px;font-weight:600;margin-right:0.5rem;" onclick="handleApprove(${o.id},'${o.phone}','${o.customerName}')"><i class="fa-solid fa-check"></i> Approve</button>
+                                <button class="btn-login" style="padding:0.6rem 1rem;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:600;" onclick="handleReject(${o.id},'${o.customerName}')"><i class="fa-solid fa-xmark"></i> Reject</button>
+                            `;
+                        }
+
+                        return `
+                            <div id="order-${o.id}" class="card" style="padding:1.5rem;border-left:4px solid ${statusBg};display:grid;grid-template-columns:auto 1fr auto auto auto;gap:1.5rem;align-items:center;">
+                                <div style="min-width:80px;">
+                                    <div style="font-size:0.75rem;color:#64748b;font-weight:600;margin-bottom:0.25rem;">ORDER</div>
+                                    <div style="font-size:1.1rem;font-weight:700;color:var(--primary);">#${o.id}</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight:600;font-size:1.05rem;margin-bottom:0.25rem;">${o.customerName}</div>
+                                    <div style="color:#64748b;font-size:0.9rem;">${o.phone} • ${o.location}</div>
+                                    <div style="color:#64748b;font-size:0.85rem;margin-top:0.25rem;">${items.length} item(s) • ${o.paymentMethod || 'COD'}</div>
+                                </div>
+                                <div style="text-align:center;min-width:100px;">
+                                    <div style="font-size:0.75rem;color:#64748b;font-weight:600;margin-bottom:0.25rem;">AMOUNT</div>
+                                    <div style="font-size:1.2rem;font-weight:700;color:var(--primary);">৳${o.totalAmount}</div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-start;min-width:120px;">
+                                    <span style="background:${payBg};color:white;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.85rem;font-weight:600;">${o.paymentStatus || 'Pending'}</span>
+                                    <span style="background:${statusBg};color:white;padding:0.3rem 0.8rem;border-radius:6px;font-size:0.85rem;font-weight:600;">${o.status}</span>
+                                </div>
+                                <div id="actions-${o.id}" style="display:flex;gap:0.5rem;min-width:300px;justify-content:flex-end;">
+                                    ${actionButtons}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    console.log(`✅ ${orders.length} orders rendered`);
+                })
+                .catch(err => {
+                    console.error('❌ Error:', err);
+                    document.getElementById('ordersContainer').innerHTML = '<div style="text-align:center;padding:2rem;background:#fee;border-radius:12px;color:#c00;"><p>Failed to load orders. Refresh page.</p></div>';
+                });
+        }
+
+        function handleApprove(orderId, phone, customerName) {
+            if (!confirm(`Approve order #${orderId} for ${customerName}?`)) return;
+
+            // Update UI immediately
+            document.getElementById(`actions-${orderId}`).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            approveOrder(orderId, phone, customerName);
+
+            // Update UI after a delay
+            setTimeout(() => {
+                document.getElementById(`actions-${orderId}`).innerHTML = '<span style="background:#10b981;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:600;"><i class="fa-solid fa-check-circle"></i> Approved</span>';
+            }, 500);
+        }
+
+        function handleReject(orderId, customerName) {
+            if (!confirm(`Reject order #${orderId} for ${customerName}?`)) return;
+
+            // Update UI immediately
+            document.getElementById(`actions-${orderId}`).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            rejectOrder(orderId, customerName);
+
+            // Update UI after a delay
+            setTimeout(() => {
+                document.getElementById(`actions-${orderId}`).innerHTML = '<span style="background:#ef4444;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:600;"><i class="fa-solid fa-times-circle"></i> Rejected</span>';
+            }, 500);
+        }
+
+        function loadApplications() {
+            fetch('/api/admin/applications')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('applicationsTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No emergency applications found.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(app => `
+                        <tr>
+                            <td>#${app.id}</td>
+                            <td>${app.applicantName}</td>
+                            <td>${app.phone}</td>
+                            <td>${app.animalCategory}</td>
+                            <td>${app.description}</td>
+                            <td>${app.location}, ${app.area}</td>
+                            <td>${app.applicationDate ? new Date(app.applicationDate).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function loadAdminProducts() {
+            fetch('/api/shop/products')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('adminProductTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No products found.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(p => `
+                        <tr>
+                            <td>
+                                ${p.imageBase64 || p.image ? `<img src="${p.imageBase64 || p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">` : '<div style="width:40px; height:40px; background:#eee; border-radius:4px;"></div>'}
+                            </td>
+                            <td>${p.name}</td>
+                            <td><span class="badge badge-info">${p.category}</span></td>
+                            <td>৳${p.price.toFixed(2)}</td>
+                            <td>${p.quantity}</td>
+                            <td>
+                                <button class="btn-login" style="padding:0.2rem 0.5rem; font-size:0.8rem; background:var(--danger); color:white; border:none;" onclick="deleteProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function deleteProduct(id) {
+            if (!confirm("Delete this product?")) return;
+
+            fetch('/api/admin/delete_product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Product deleted successfully!');
+                        loadAdminProducts();
+                    } else {
+                        alert('Error: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => alert('Error: ' + err.message));
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const fileInput = document.getElementById('productImage');
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    data.image = e.target.result;
+                    submitProduct(data);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                submitProduct(data);
+            }
+        }
+
+        function submitProduct(data) {
+            fetch('/api/admin/add_product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert('Product added successfully!');
+                        closeModal('productModal');
+                    } else {
+                        alert('Error: ' + res.message);
+                    }
+                });
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function loadStats() {
+            fetch('/api/admin/stats')
+                .then(res => res.json())
+                .then(data => {
+                    if(document.getElementById('userCount')) document.getElementById('userCount').textContent = data.users || 0;
+                    document.getElementById('doctorCount').textContent = data.doctors;
+                    document.getElementById('rescueCount').textContent = data.rescuers;
+                    document.getElementById('recoveredCount').textContent = data.recovered;
+                    document.getElementById('donationCount').textContent = '৳' + data.donations.toLocaleString();
+                    document.getElementById('orderCount').textContent = data.orders;
+                });
+            loadRecentOrders();
+        }
+
+        function loadRecentOrders() {
+            fetch('/api/admin/orders')
+                .then(res => res.json())
+                .then(orders => {
+                    const tbody = document.getElementById('recentOrdersTable');
+                    if(!tbody) return;
+                    if (orders.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No recent orders.</td></tr>';
+                        return;
+                    }
+                    orders.sort((a, b) => b.id - a.id);
+                    const recent = orders.slice(0, 5);
+                    tbody.innerHTML = recent.map(o => `
+                        <tr>
+                            <td style="font-weight: 600;">#${o.id}</td>
+                            <td>
+                                <div>${o.customerName}</div>
+                                <div style="font-size: 0.8rem; color:var(--text-muted)">${o.phone}</div>
+                            </td>
+                            <td style="font-weight: 700; color:var(--primary);">৳${o.totalAmount}</td>
+                            <td><span class="badge ${getBadgeClass(o.status)}">${o.status}</span></td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(err => console.error('Error loading recent orders:', err));
+        }
+
+        // We don't have a direct "list doctors" API yet, so I'll mock it or we need to add it.
+        // Actually, let's assume we can fetch it or I'll add a handler later.
+        // For now, I'll leave it as "Coming Soon" or try to fetch if I added it.
+        // Wait, I didn't add a "List Doctors" handler.
+        // I'll add a placeholder for now.
+        function loadDoctors() {
+            fetch('/api/admin/doctor')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('doctorGrid');
+                    if (data.length === 0) {
+                        grid.innerHTML = '<div style="width:100%; text-align:center; padding: 2rem;">No doctors found.</div>';
+                        return;
+                    }
+                    grid.innerHTML = data.map(d => `
+                        <div class="card" style="position: relative;">
+                            <button onclick="deleteDoctor(${d.id})" style="position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                                ${d.photo ? `<img src="${d.photo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">` : '<div style="width:60px; height:60px; background:#e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fa-solid fa-user-doctor"></i></div>'}
+                                <div>
+                                    <h3 style="margin:0; font-size:1.1rem;">${d.firstName} ${d.lastName}</h3>
+                                    <span class="badge badge-info" style="margin-top: 5px; display: inline-block;">${d.specialty}</span>
+                                </div>
+                            </div>
+                            <p class="mb-1"><i class="fa-solid fa-phone"></i> ${d.phone}</p>
+                            <p class="mb-1"><i class="fa-solid fa-map-marker-alt"></i> ${d.location || 'Not Specified'}</p>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function deleteDoctor(id) {
+            if (!confirm('Are you sure you want to delete this doctor? This action cannot be undone.')) return;
+
+            fetch('/api/admin/delete_doctor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Doctor deleted successfully!');
+                        loadDoctors();
+                    } else {
+                        alert('Failed to delete doctor: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Error deleting doctor:', err);
+                    alert('Error deleting doctor: ' + err.message);
+                });
+        }
+
+        function loadRescueTeam() {
+            fetch('/api/admin/rescue_list')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('rescueGrid');
+                    grid.innerHTML = data.map(r => `
+                        <div class="card" style="position: relative;">
+                            <button onclick="deleteRescue(${r.id})" style="position: absolute; top: 10px; right: 10px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                                ${r.photo ? `<img src="${r.photo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">` : '<div style="width:60px; height:60px; background:#e2e8f0; border-radius:50%;"></div>'}
+                                <div>
+                                    <h3 style="margin:0; font-size:1.1rem;">${r.firstName} ${r.lastName}</h3>
+                                    <span class="badge badge-success">${r.status}</span>
+                                </div>
+                            </div>
+                            <p class="mb-1"><i class="fa-solid fa-phone"></i> ${r.phone}</p>
+                            <p class="mb-1"><i class="fa-solid fa-location-dot"></i> ${r.location}</p>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function deleteRescue(id) {
+            if (!confirm('Are you sure you want to delete this rescue member?')) return;
+
+            fetch('/api/admin/delete_rescue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Rescue member deleted successfully.');
+                        loadRescueTeam();
+                    } else {
+                        alert('Failed to delete: ' + data.message);
+                    }
+                })
+                .catch(err => alert('Error: ' + err.message));
+        }
+
+        function loadTreatments() {
+            fetch('/api/admin/treatments/list')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('treatmentTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No active treatments.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(t => `
+                        <tr>
+                            <td>#${t.appId}</td>
+                            <td>${t.applicant}</td>
+                            <td>${t.animal}</td>
+                            <td>${t.doctor || '<span class="text-muted">Unassigned</span>'}</td>
+                            <td>
+                                <span class="badge ${getStatusBadge(t.status)}">${t.status}</span>
+                                ${t.status === 'Completed' ? `
+                                    <button onclick="moveToAdoption(${t.id}, ${t.appId})" style="margin-left:5px; padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-paw"></i> Give for Adoption</button>
+                                ` : ''}
+                            </td>
+                            <td>${t.updated}</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function getStatusBadge(status) {
+            if (status === 'Completed') return 'badge-success';
+            if (status === 'Under Treatment') return 'badge-info';
+            if (status === 'RescueRequested') return 'badge-warning';
+            if (status === 'Rescued') return 'badge-primary';
+            if (status === 'Emergency Submitted') return 'badge-danger';
+            return 'badge-secondary';
+        }
+
+        function moveToAdoption(treatmentId, appId) {
+            if (!confirm('Move this pet to adoption list?')) return;
+
+            fetch('/api/admin/adoption/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId: treatmentId.toString(), appId: appId.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Pet moved to adoption list successfully!');
+                        loadTreatments();
+                        loadAdoptionData();
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to move to adoption'));
+                    }
+                })
+                .catch(err => alert('Error: ' + err.message));
+        }
+
+        function loadAdoptionData() {
+            loadAdoptionApps();
+            loadAdoptionPets();
+        }
+
+        function loadAdoptionApps() {
+            fetch('/api/admin/adoption/requests')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('adoptionTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No adoption applications.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(a => `
+                        <tr>
+                            <td>#${a.id}</td>
+                            <td>${a.petName || 'Unknown Pet'}</td>
+                            <td>${a.applicant}</td>
+                            <td>${a.phone}</td>
+                            <td>${a.reason}</td>
+                            <td><span class="badge ${a.status === 'Approved' ? 'badge-success' : (a.status === 'Rejected' ? 'badge-danger' : 'badge-warning')}">${a.status}</span></td>
+                            <td>
+                                ${a.status.trim().toLowerCase() === 'pending' ? `
+                                    <button class="btn-primary" style="padding:0.3rem 0.6rem; font-size:0.85rem; margin-right:0.3rem;" onclick="updateAdoptionStatus(${a.id}, 'Approved')" title="Approve Application"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn-login" style="padding:0.3rem 0.6rem; font-size:0.85rem; background:var(--danger); color:white; border:2px solid var(--danger);" onclick="updateAdoptionStatus(${a.id}, 'Rejected')" title="Reject Application"><i class="fa-solid fa-xmark"></i></button>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function loadAdoptionPets() {
+            fetch('/api/adoption/list')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('adoptionPetsTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No pets in adoption list.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(p => `
+                        <tr>
+                            <td>#${p.id}</td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    ${p.imageBase64 || p.image ? `<img src="${p.imageBase64 || p.image}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '<div style="width:40px; height:40px; background:#eee; border-radius:50%;"></div>'}
+                                    ${p.name}
+                                </div>
+                            </td>
+                            <td>${p.category}</td>
+                            <td><span class="badge ${p.status === 'Available' ? 'badge-success' : 'badge-info'}">${p.status}</span></td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        function updateAdoptionStatus(id, status) {
+            if (!confirm(`Mark application #${id} as ${status}?`)) return;
+
+            fetch('/api/admin/adoption/decide', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId: id.toString(), status: status })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) loadAdoptionApps();
+                    else alert('Failed to update status');
+                });
+        }
+
+        function loadOrders() {
+            fetch('/api/admin/orders')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('ordersTable');
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No orders found.</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(order => {
+                        // Parse items JSON
+                        let itemsList = 'N/A';
+                        try {
+                            const items = JSON.parse(order.items || '[]');
+                            itemsList = items.map(item => `${item.name} (x${item.quantity})`).join(', ');
+                        } catch (e) {
+                            itemsList = 'Invalid items data';
+                        }
+
+                        return `
+                        <tr>
+                            <td>#${order.id}</td>
+                            <td>${order.customerName || 'N/A'}</td>
+                            <td>${order.phone || 'N/A'}</td>
+                            <td>${order.location || 'N/A'}</td>
+                            <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${itemsList}">${itemsList}</td>
+                            <td>৳${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</td>
+                            <td><span class="badge ${getOrderStatusBadge(order.status)}">${order.status}</span></td>
+                            <td>
+                                ${order.status === 'Pending' ? `
+                                    <button class="btn-primary" style="padding:0.3rem 0.6rem; font-size:0.85rem; margin-right:0.3rem;" onclick="updateOrderStatus(${order.id}, 'Approved', '${order.phone}')" title="Approve Order"><i class="fa-solid fa-check"></i> Approve</button>
+                                    <button class="btn-login" style="padding:0.3rem 0.6rem; font-size:0.85rem; background:var(--danger); color:white; border:2px solid var(--danger);" onclick="updateOrderStatus(${order.id}, 'Rejected', '${order.phone}')" title="Reject Order"><i class="fa-solid fa-times"></i> Reject</button>
+                                ` : order.status === 'Approved' ? `
+                                    <button class="btn-login" style="padding:0.3rem 0.6rem; font-size:0.85rem; background:var(--success); color:white; border:2px solid var(--success);" onclick="updateOrderStatus(${order.id}, 'Delivered', '${order.phone}')" title="Mark Delivered"><i class="fa-solid fa-truck"></i> Delivered</button>
+                                ` : `<span class="text-muted">No actions</span>`}
+                            </td>
+                        </tr>
+                    `}).join('');
+                });
+        }
+
+        function getOrderStatusBadge(status) {
+            if (status === 'Delivered') return 'badge-success';
+            if (status === 'Processing') return 'badge-info';
+            if (status === 'Pending') return 'badge-warning';
+            return 'badge-secondary';
+        }
+
+        function updateOrderStatus(orderId, status, phone) {
+            if (!confirm(`Update order #${orderId} to ${status}?`)) return;
+
+            fetch('/api/admin/update_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: orderId.toString(), status: status, phone: phone })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order status updated successfully! SMS sent to customer.');
+                        loadOrders();
+                    } else {
+                        alert('Failed to update order status');
+                    }
+                })
+                .catch(err => alert('Error: ' + err.message));
+        }
+
+        function addDoctor(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            const fullName = `${firstName} ${lastName}`;
+            
+            const payload = {
+                name: fullName,
+                specialty: formData.get('specialty'),
+                phone: formData.get('phone'),
+                location: formData.get('location'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                photo: ''
+            };
+
+            const fileInput = document.getElementById('doctorPhoto');
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    payload.photo = e.target.result;
+                    submitDoctorData(payload, e.target.form || document.querySelector('#doctorModal form'));
+                };
+                reader.onerror = function () {
+                    alert('Error reading photo file. Please try again.');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                submitDoctorData(payload, e.target);
+            }
+        }
+
+        function submitDoctorData(payload, formElement) {
+            fetch('/api/admin/doctor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert('Doctor added successfully!');
+                        closeModal('doctorModal');
+                        if (formElement) formElement.reset();
+                        loadDoctors();
+                    } else {
+                        alert('Error: ' + (res.message || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Error adding doctor:', err);
+                    alert('Failed to add doctor: ' + err.message);
+                });
+        }
+
+        function addRescue(e) {
+            e.preventDefault();
+            console.log('Rescue form submitted');
+
+            const formData = new FormData(e.target);
+
+            // Combine first and last name
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            const fullName = `${firstName} ${lastName}`;
+
+            const phone = formData.get('phone');
+            const location = formData.get('location');
+            const username = formData.get('username');
+            const password = formData.get('password');
+
+            // Validate required fields
+            if (!firstName || !lastName || !phone || !location || !username || !password) {
+                alert('Please fill in all required fields');
+                console.error('Validation failed: Missing required fields');
+                return;
+            }
+
+            console.log('Form data:', { fullName, phone, location, username, password });
+
+            const fileInput = document.getElementById('rescuePhoto');
+            if (fileInput.files.length > 0) {
+                console.log('Photo selected, reading file...');
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const photoData = e.target.result;
+                    console.log('Photo encoded, length:', photoData.length);
+                    submitRescueData(fullName, phone, location, username, password, photoData);
+                };
+                reader.onerror = function () {
+                    console.error('Error reading photo file');
+                    alert('Error reading photo file. Please try again.');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                console.log('No photo selected, submitting without photo...');
+                submitRescueData(fullName, phone, location, username, password, '');
+            }
+        }
+
+        function submitRescueData(name, phone, location, username, password, photo) {
+            console.log('Submitting rescue data to server...');
+
+            // Create a simple object with only necessary string fields
+            const payload = {
+                name: name,
+                phone: phone,
+                location: location,
+                username: username,
+                password: password,
+                photo: photo || ''
+            };
+
+            console.log('Payload:', { ...payload, photo: photo ? `<base64 data ${photo.length} chars>` : 'none' });
+
+            fetch('/api/admin/add_rescue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => {
+                    console.log('Server response status:', res.status);
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    console.log('Server response:', res);
+                    if (res.success) {
+                        alert('Rescue member added successfully!');
+                        closeModal('rescueModal');
+                        document.querySelector('#rescueModal form').reset();
+                        loadRescueTeam();
+                    } else {
+                        alert('Failed to add rescue member: ' + (res.message || 'Unknown error'));
+                        console.error('Server returned error:', res);
+                    }
+                })
+                .catch(error => {
+                    console.error('Network or fetch error:', error);
+                    alert('Failed to add rescue member. Error: ' + error.message);
+                });
+        }
+    </script>
+</body>
+
+</html>

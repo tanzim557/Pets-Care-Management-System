@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-cart-shopping"></i> Shopping Cart</div>
+        <nav>
+            <ul>
+                <li><a href="/shop.html">Continue Shopping</a></li>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <h2 style="margin-bottom: 1.5rem;">Your Cart</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cartTable">
+                <!-- Items will be loaded here -->
+            </tbody>
+        </table>
+
+        <div style="margin-top: 2rem; text-align: right;">
+            <h3>Grand Total: <span id="cartTotal">৳0.00</span></h3>
+            <button onclick="openCheckoutModal()" class="btn-submit" style="margin-top: 1rem;">Proceed to
+                Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="login-box" style="max-width: 500px; width: 90%; padding: 2.5rem; border-radius: 1rem;">
+            <span class="close-modal" onclick="closeCheckoutModal()" style="top: 1.5rem; right: 1.5rem;">&times;</span>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 class="mb-2" style="font-size: 1.8rem; color: var(--text-primary);">Checkout</h2>
+                <p class="text-muted">Complete your order details below.</p>
+            </div>
+
+            <form onsubmit="submitCheckout(event)">
+                <div class="form-group">
+                    <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">Full Name</label>
+                    <div style="position: relative;">
+                        <i class="fa-solid fa-user"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <input type="text" name="name" required placeholder="Receiver's Name"
+                            style="padding-left: 2.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; width: 100%; padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">Phone Number</label>
+                    <div style="position: relative;">
+                        <i class="fa-solid fa-phone"
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                        <input type="tel" name="phone" required placeholder="01XXXXXXXXX"
+                            style="padding-left: 2.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; width: 100%; padding-top: 0.75rem; padding-bottom: 0.75rem;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">Delivery Address</label>
+                    <div style="position: relative;">
+                        <i class="fa-solid fa-location-dot"
+                            style="position: absolute; left: 1rem; top: 1rem; color: var(--text-muted);"></i>
+                        <textarea name="location" rows="3" required placeholder="Full Address..."
+                            style="padding-left: 2.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; width: 100%; padding-top: 0.75rem;"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">Payment Method</label>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:0.5rem;">
+                        <label
+                            style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; transition: all 0.2s;"
+                            class="payment-option">
+                            <input type="radio" name="paymentMethod" value="COD" checked
+                                style="accent-color: var(--primary);">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Cash on Delivery</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Pay when received</div>
+                            </div>
+                        </label>
+                        <label
+                            style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; transition: all 0.2s;"
+                            class="payment-option">
+                            <input type="radio" name="paymentMethod" value="SSLCommerz"
+                                style="accent-color: var(--primary);">
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.9rem;">Online Payment</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Cards, bKash, etc.</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"
+                    style="width:100%; padding: 1rem; font-size: 1rem; margin-top: 1rem;">
+                    Place Order <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let total = 0;
+
+        loadCart();
+
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const tbody = document.getElementById('cartTable');
+            total = 0;
+
+            if (cart.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem;">Your cart is empty. <a href="shop.html" style="color:var(--secondary);">Go Shopping</a></td></tr>';
+                document.getElementById('cartTotal').textContent = '৳0.00';
+                return;
+            }
+
+            tbody.innerHTML = cart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <tr>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:1rem;">
+                                ${item.image ? `<img src="${item.image}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">` : '<div style="width:50px; height:50px; background:#eee; border-radius:4px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-box"></i></div>'}
+                                <span>${item.name}</span>
+                            </div>
+                        </td>
+                        <td>৳${item.price.toFixed(2)}</td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <button onclick="changeQty(${index}, -1)" class="action-btn" style="width:24px; height:24px; padding:0; display:flex; align-items:center; justify-content:center;">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="changeQty(${index}, 1)" class="action-btn" style="width:24px; height:24px; padding:0; display:flex; align-items:center; justify-content:center;">+</button>
+                            </div>
+                        </td>
+                        <td>৳${itemTotal.toFixed(2)}</td>
+                        <td>
+                            <button onclick="removeItem(${index})" class="action-btn btn-delete" style="padding:0.3rem 0.6rem;"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('cartTotal').textContent = '৳' + total.toFixed(2);
+        }
+
+        function changeQty(index, delta) {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart[index].quantity += delta;
+            if (cart[index].quantity < 1) cart[index].quantity = 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function removeItem(index) {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function openCheckoutModal() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cart.length === 0) {
+                alert("Cart is empty!");
+                return;
+            }
+            document.getElementById('checkoutModal').classList.add('active');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function submitCheckout(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            data.items = JSON.stringify(cart);
+            data.total = total;
+
+            fetch('/api/shop/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        if (res.redirectUrl) {
+                            // Redirect to SSLCommerz
+                            window.location.href = res.redirectUrl;
+                        } else {
+                            alert("Order placed successfully! You will receive an SMS confirmation.");
+                            localStorage.removeItem('cart');
+                            window.location.href = '/shop.html';
+                        }
+                    } else {
+                        alert("Checkout failed: " + res.message);
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

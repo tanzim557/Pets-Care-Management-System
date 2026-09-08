@@ -1,0 +1,237 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Status - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(-45deg, #022c22, #0f766e, #0369a1, #0f172a);
+            background-size: 400% 400%;
+            animation: radarBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes radarBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .paw-track {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 3.5rem;
+            z-index: 0;
+            opacity: 0;
+            animation: walkTrack 7s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes walkTrack {
+            0% { opacity: 0; transform: scale(0.5) rotate(45deg); }
+            10% { opacity: 1; transform: scale(1) rotate(45deg); }
+            30% { opacity: 0; transform: scale(1.1) rotate(45deg); }
+            100% { opacity: 0; transform: scale(1.1) rotate(45deg); }
+        }
+
+        .logo, nav a {
+            color: white !important;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 0 50px rgba(67, 56, 202, 0.25), 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2.6rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            background: var(--bg-white);
+            border: 3px solid var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .timeline-item.active .timeline-dot {
+            border-color: var(--primary);
+            background: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .timeline-item.completed .timeline-dot {
+            border-color: var(--secondary);
+            background: var(--secondary);
+        }
+
+        .timeline-content {
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme Effects for Background: Walking Paw Tracks -->
+    <div class="paw-track" style="bottom: 10%; left: 5%; animation-delay: 0s; margin-left: 0;"><i class="fa-solid fa-paw"></i></div>
+    <div class="paw-track" style="bottom: 25%; left: 20%; animation-delay: 1s; margin-left: 4rem;"><i class="fa-solid fa-paw"></i></div>
+    <div class="paw-track" style="bottom: 40%; left: 35%; animation-delay: 2s; margin-left: 0;"><i class="fa-solid fa-paw"></i></div>
+    <div class="paw-track" style="bottom: 55%; left: 50%; animation-delay: 3s; margin-left: 4rem;"><i class="fa-solid fa-paw"></i></div>
+    <div class="paw-track" style="bottom: 70%; left: 65%; animation-delay: 4s; margin-left: 0;"><i class="fa-solid fa-paw"></i></div>
+    <div class="paw-track" style="bottom: 85%; left: 80%; animation-delay: 5s; margin-left: 4rem;"><i class="fa-solid fa-paw"></i></div>
+
+
+    <header>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="logo"><i class="fa-solid fa-magnifying-glass"></i> Track Application</div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop.html">Shop</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="dashboard-container" style="max-width:800px;">
+        <div class="card mb-4">
+            <h2 class="mb-3">Track Your Emergency Status</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:1rem; align-items:end;">
+                <div class="form-group" style="margin:0;">
+                    <label>Application ID</label>
+                    <input type="text" id="trackId" placeholder="e.g. 15">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Applicant Name</label>
+                    <input type="text" id="trackName" placeholder="Enter name">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <label>Phone Number</label>
+                    <input type="text" id="trackPhone" placeholder="Enter phone">
+                </div>
+                <button onclick="trackStatus()" class="btn-primary">Track</button>
+            </div>
+        </div>
+
+        <div id="resultArea" style="display:none;">
+            <div class="timeline" id="timeline">
+                <!-- Timeline items will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function trackStatus() {
+            const id = document.getElementById('trackId').value;
+            const name = document.getElementById('trackName').value;
+            const phone = document.getElementById('trackPhone').value;
+
+            if (!id && (!name || !phone)) {
+                alert('Please enter Application ID OR (Name + Phone Number)');
+                return;
+            }
+
+            fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, name: name, phone: phone })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === false) {
+                        alert(data.message || 'No application found with these details.');
+                        return;
+                    }
+
+                    // Success - show timeline
+                    renderTimeline(data);
+                    document.getElementById('resultArea').style.display = 'block';
+
+                    // Start polling
+                    if (window.pollInterval) clearInterval(window.pollInterval);
+                    window.pollInterval = setInterval(() => trackStatus(), 10000);
+                })
+                .catch(err => {
+                    alert('Error fetching tracking data');
+                    console.error(err);
+                });
+        }
+
+        function renderTimeline(app) {
+            const steps = [
+                { status: 'Emergency Submitted', label: 'Emergency Submitted', desc: 'Your application has been received.' },
+                { status: 'RescueRequested', label: 'Rescue Team Dispatched', desc: 'A rescue team is on the way to your location.' },
+                { status: 'Rescued', label: 'Animal Rescued', desc: 'The animal has been safely rescued.' },
+                { status: 'Under Treatment', label: 'Under Treatment', desc: 'A doctor has been assigned and treatment has started.' },
+                { status: 'Completed', label: 'Healthy & Recovered', desc: 'The animal has fully recovered!' }
+            ];
+
+            // Determine which step is currently active based on the status
+            let activeIndex = 0;
+            const currentStatus = app.status || 'Emergency Submitted';
+
+            // Map status to index
+            if (currentStatus === 'Emergency Submitted' || currentStatus === 'Pending') {
+                activeIndex = 0;
+            } else if (currentStatus === 'RescueRequested') {
+                activeIndex = 1;
+            } else if (currentStatus === 'Rescued') {
+                activeIndex = 2;
+            } else if (currentStatus === 'Under Treatment') {
+                activeIndex = 3;
+            } else if (currentStatus === 'Completed') {
+                activeIndex = 4;
+            } else {
+                // For any other status, default to showing "Emergency Submitted"
+                console.log('Unknown status:', currentStatus, '- defaulting to Emergency Submitted');
+                activeIndex = 0;
+            }
+
+            const html = steps.map((step, index) => {
+                let className = 'timeline-item';
+                if (index < activeIndex) className += ' completed';
+                if (index === activeIndex) className += ' active';
+
+                return `
+                    <div class="${className}">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3 style="margin-bottom:0.5rem; color:${index === activeIndex ? 'var(--primary)' : 'inherit'}">${step.label}</h3>
+                            <p class="text-muted">${step.desc}</p>
+                            ${index === activeIndex && app.updated ? `<p class="mt-2 text-muted" style="font-size:0.85rem;">Last updated: ${app.updated}</p>` : ''}
+                            ${index === activeIndex ? `<p class="mt-2" style="font-size:0.85rem; font-weight:600; color:var(--primary);">Current Status: ${currentStatus}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('timeline').innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

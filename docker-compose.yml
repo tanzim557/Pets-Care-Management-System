@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # MySQL Database Service (Carries your data!)
+  mysql:
+    image: mysql:8.0
+    container_name: petscare-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: PetsCare
+      MYSQL_USER: petscare_user
+      MYSQL_PASSWORD: petscare_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # This performs the Magic: Auto-loads your database on first run
+      - ./db_init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - petscare-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  # Spring Boot Application Service
+  app:
+    # Build from source for maximum compatibility
+    build: .
+    image: my-client-app:latest
+    container_name: petscare-app
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Connects automatically to the 'mysql' service above
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/PetsCare?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: petscare_user
+      SPRING_DATASOURCE_PASSWORD: petscare_pass
+      # Ensure tables are updated if code changes
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      # AUTOMATIC SMS CONFIGURATION
+      # No need to set these manually on the new machine!
+      SMS_API_KEY: RxE3j0OrkkWS8hYUPmRs
+      SMS_SENDER_ID: 8809617631158
+    ports:
+      - "8080:8080"
+    networks:
+      - petscare-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  petscare-network:
+    driver: bridge

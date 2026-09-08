@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-rescue {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-rescued {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .user-highlight {
+            background: linear-gradient(135deg, rgba(238,242,255,0.8), rgba(224,231,255,0.8));
+            padding: 0.5rem 1.25rem;
+            border-radius: 999px;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-highlight .name-text {
+            background: linear-gradient(90deg, #4f46e5, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i class="fa-solid fa-user-doctor"></i> Doctor Portal</div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showSection('available')"><i
+                        class="fa-solid fa-house-medical-circle-exclamation"></i> Available Cases</button>
+                <button class="nav-item" onclick="showSection('patients')"><i class="fa-solid fa-heart-pulse"></i> My
+                    Patients</button>
+                <div style="flex:1"></div>
+                <a href="/logout" class="nav-item" style="color: var(--danger);"><i
+                        class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Available Cases -->
+            <div id="available" class="section active">
+                <div class="header-bar" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h1 class="page-title">Emergency Cases</h1>
+                    </div>
+                    <div class="user-info user-highlight">
+                        <i class="fa-solid fa-user-doctor" style="color: #4f46e5;"></i>
+                        <span class="docNameDisplay name-text">Doctor</span> 
+                        <span style="color: #94a3b8; margin: 0 4px;">|</span>
+                        <span class="docSpecialtyDisplay badge badge-info">General</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <label><strong>Filter Cases:</strong></label>
+                    <select id="caseFilter" onchange="filterCases()"
+                        style="padding:0.5rem; border-radius:0.25rem; border:1px solid #ddd;">
+                        <option value="all">Show All Cases</option>
+                        <option value="my">Match My Specialty</option>
+                        <option value="Dog">Dogs Only</option>
+                        <option value="Cat">Cats Only</option>
+                        <option value="Bird">Birds Only</option>
+                    </select>
+                    <button onclick="loadCases()" class="btn-login"><i class="fa-solid fa-rotate-right"></i> Refresh
+                        List</button>
+                </div>
+
+                <div class="services" id="casesGrid" style="padding:0;">
+                    <!-- Cases go here -->
+                    <div class="text-center p-5">Loading cases...</div>
+                </div>
+            </div>
+
+            <!-- My Patients -->
+            <div id="patients" class="section" style="display:none;">
+                <div class="header-bar" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h1 class="page-title">My Patients</h1>
+                        <button onclick="loadPatients()" class="btn-login" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+                    </div>
+                    <div class="user-info user-highlight">
+                        <i class="fa-solid fa-user-doctor" style="color: #4f46e5;"></i>
+                        <span class="docNameDisplay name-text">Doctor</span> 
+                        <span style="color: #94a3b8; margin: 0 4px;">|</span>
+                        <span class="docSpecialtyDisplay badge badge-info">General</span>
+                    </div>
+                </div>
+                <div class="services" id="patientsGrid" style="padding:0;">
+                    <!-- Patients go here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Medicine Modal -->
+    <div id="medicineModal" class="modal">
+        <div class="login-box">
+            <span class="close-modal" onclick="closeModal('medicineModal')">&times;</span>
+            <h2 class="mb-3">Prescribe Medicine</h2>
+            <input type="hidden" id="modalTreatmentId">
+            <div class="form-group">
+                <label>Select Medicine</label>
+                <select id="medicineSelect">
+                    <option value="Painkiller">Painkiller</option>
+                    <option value="Antibiotics">Antibiotics</option>
+                    <option value="Bandage">Bandage</option>
+                    <option value="Antiseptic">Antiseptic</option>
+                    <option value="Vitamins">Vitamins</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Dosage / Instructions</label>
+                <textarea id="medicineNotes" rows="3" placeholder="e.g. Twice daily after food"></textarea>
+            </div>
+            <button onclick="submitMedicine()" class="btn-submit" style="width:100%">Confirm Prescription</button>
+        </div>
+    </div>
+
+    <script>
+        // Get doctor info from cookies
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        const doctorId = getCookie('doctorId');
+        const specialty = getCookie('specialty') || 'General';
+        const rawFullName = getCookie('fullName');
+        const username = getCookie('user');
+        
+        let displayName = username || 'Doctor';
+        if(rawFullName) {
+            displayName = decodeURIComponent(rawFullName.replace(/\+/g, ' '));
+        }
+
+        // Update UI with doctor info
+        document.querySelectorAll('.docNameDisplay').forEach(el => el.textContent = displayName);
+        document.querySelectorAll('.docSpecialtyDisplay').forEach(el => el.textContent = specialty);
+
+        // Set default filter to "My Specialty" if not General
+        if (specialty && specialty !== 'General') {
+            document.getElementById('caseFilter').value = 'my';
+        }
+
+        // Global data storage
+        let allCases = [];
+
+        // Initial Load
+        loadCases();
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (id === 'available') loadCases();
+            if (id === 'patients') loadPatients();
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function loadCases() {
+            console.log('Fetching all cases...');
+            fetch('/api/doctor/cases')
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Received cases:', data);
+                    allCases = data;
+                    filterCases();
+                })
+                .catch(err => {
+                    console.error('Error loading cases:', err);
+                    document.getElementById('casesGrid').innerHTML = '<p class="text-danger">Error loading cases. Please try again.</p>';
+                });
+        }
+
+        function filterCases() {
+            const filter = document.getElementById('caseFilter').value;
+            let filtered = allCases;
+
+            if (filter === 'my') {
+                if (specialty && specialty !== 'General') {
+                    filtered = allCases.filter(c => c.category === specialty || c.category === 'Other');
+                }
+            } else if (filter !== 'all') {
+                filtered = allCases.filter(c => c.category === filter);
+            }
+
+            renderCases(filtered);
+        }
+
+        function renderCases(cases) {
+            const grid = document.getElementById('casesGrid');
+            if (cases.length === 0) {
+                grid.innerHTML = '<div class="card text-center" style="grid-column: 1/-1;"><p class="text-muted">No cases found matching your criteria.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = cases.map(c => {
+                let statusClass = 'status-pending';
+                if (c.status === 'RescueRequested') statusClass = 'status-rescue';
+                if (c.status === 'Rescued') statusClass = 'status-rescued';
+
+                return `
+                <div class="card">
+                    ${c.image ? `<img src="${c.image}" style="width:100%; height:200px; object-fit:cover; border-radius:0.5rem; margin-bottom:1rem;">` : ''}
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; align-items:center;">
+                        <span class="status-badge ${statusClass}">${c.status}</span>
+                        <span class="badge badge-info">${c.category}</span>
+                    </div>
+                    <h3>${c.applicant}</h3>
+                    <p class="mb-1"><i class="fa-solid fa-phone"></i> ${c.phone}</p>
+                    <p class="mb-1"><i class="fa-solid fa-location-dot"></i> ${c.area} - ${c.location}</p>
+                    <p class="mb-2 p-2" style="background:var(--bg-light); border-radius:0.5rem;">${c.desc}</p>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button onclick="assignToMe(${c.id})" class="btn-primary" style="flex:1">Assign to Me</button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function loadPatients() {
+            fetch(`/api/doctor/my_patients?doctorId=${doctorId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('patientsGrid');
+                    if (data.length === 0) {
+                        grid.innerHTML = '<p class="text-muted">You have no assigned patients.</p>';
+                        return;
+                    }
+                    grid.innerHTML = data.map(p => `
+                        <div class="card">
+                            ${p.image ? `<img src="${p.image}" style="width:100%; height:200px; object-fit:cover; border-radius:0.5rem; margin-bottom:1rem;">` : ''}
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                <h3 style="margin:0;">${p.applicant}'s ${p.category}</h3>
+                                <span class="badge ${p.status === 'Completed' ? 'badge-success' : 'badge-info'}">${p.status}</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Treatment Notes</label>
+                                <textarea id="notes-${p.treatmentId}" rows="3" placeholder="Add clinical notes...">${p.notes}</textarea>
+                                <button onclick="saveNotes(${p.treatmentId})" class="btn-login" style="margin-top:0.5rem; font-size:0.8rem; padding:0.4rem 0.8rem;">Save Notes</button>
+                            </div>
+
+                            ${p.medicine ? `<p class="mb-2 p-2" style="background:#dbeafe; color:#1e40af; border-radius:0.5rem;"><strong><i class="fa-solid fa-pills"></i> Prescribed:</strong> ${p.medicine}</p>` : ''}
+
+                            ${(p.status === 'Completed' || p.status === 'Moved to Adoption') ? '' : `
+                            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
+                                <button onclick="openMedicineModal(${p.treatmentId})" class="btn-login" style="width:100%;"><i class="fa-solid fa-prescription-bottle-medical"></i> Prescribe Medicine</button>
+                                <div style="display:flex; gap:0.5rem;">
+                                    <button onclick="markHealthy(${p.treatmentId})" class="btn-primary" style="flex:1; background:var(--secondary); padding:0.5rem; font-size:0.8rem;"><i class="fa-solid fa-heart-circle-check"></i> Healthy</button>
+                                    <button onclick="returnToOwner(${p.treatmentId})" class="btn-primary" style="flex:1; background:var(--primary); padding:0.5rem; font-size:0.8rem;"><i class="fa-solid fa-house-chimney-user"></i> Return</button>
+                                    <button onclick="moveToAdoption(${p.treatmentId}, ${p.id})" class="btn-primary" style="flex:1; background:var(--warning); color:var(--dark); padding:0.5rem; font-size:0.8rem;"><i class="fa-solid fa-paw"></i> Adopt</button>
+                                </div>
+                            </div>
+                            `}
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function assignToMe(caseId) {
+            if (!doctorId) {
+                alert('Error: Doctor ID not found. Please log in again.');
+                return;
+            }
+
+            fetch('/api/doctor/assign_to_me', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ caseId: caseId.toString(), doctorId: doctorId.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Case assigned to you!');
+                        loadCases();
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to assign case'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Error assigning case:', err);
+                    alert('Error assigning case: ' + err.message);
+                });
+        }
+
+        function saveNotes(treatmentId) {
+            const notes = document.getElementById(`notes-${treatmentId}`).value;
+            fetch('/api/doctor/save_notes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId: treatmentId.toString(), notes: notes })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) alert('Notes saved!');
+                });
+        }
+
+        function submitMedicine() {
+            const treatmentId = document.getElementById('modalTreatmentId').value;
+            const medicine = document.getElementById('medicineSelect').value;
+            const notes = document.getElementById('medicineNotes').value;
+
+            fetch('/api/treatment/assign_medicine', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId, medicine, doctorId, notes })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Medicine prescribed!');
+                        closeModal('medicineModal');
+                        loadPatients();
+                    }
+                });
+        }
+
+        function markHealthy(treatmentId) {
+            if (!confirm('Mark this patient as fully recovered?')) return;
+            fetch('/api/treatment/update_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId, status: 'Healthy', notes: 'Patient fully recovered.' })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Patient marked as healthy!');
+                        loadPatients();
+                    }
+                });
+        }
+
+        function returnToOwner(treatmentId) {
+            if (!confirm('Return this patient to the owner? An SMS will be sent.')) return;
+            fetch('/api/treatment/update_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId, status: 'Completed', notes: 'Patient returned to owner.' })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Patient marked as Completed and returned to owner!');
+                        loadPatients();
+                    }
+                });
+        }
+
+        function moveToAdoption(treatmentId, appId) {
+            if (!confirm('Move this patient to the Adoption list?')) return;
+            fetch('/api/treatment/move_to_adoption', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ treatmentId: treatmentId.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Patient moved to adoption list successfully!');
+                        loadPatients();
+                    } else {
+                        alert('Failed: ' + (data.message || 'Unknown error'));
+                    }
+                });
+        }
+
+        function requestRescue(id) {
+            if (!confirm('Request rescue team for this case?')) return;
+
+            fetch('/api/doctor/request_rescue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id.toString(), doctorId: doctorId.toString() })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message || 'Rescue team requested!');
+                        loadCases();
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to request rescue'));
+                    }
+                })
+                .catch(err => {
+                    console.error('Error requesting rescue:', err);
+                    alert('Error requesting rescue: ' + err.message);
+                });
+        }
+    </script>
+</body>
+
+</html>

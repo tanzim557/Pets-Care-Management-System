@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-user"></i> My Dashboard</div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="shop.html"><i class="fa-solid fa-bag-shopping"></i> Shop</a></li>
+                <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart (<span
+                            id="cartCount">0</span>)</a></li>
+                <li><a href="/logout" class="btn-login">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <h2 style="margin-bottom: 1.5rem;">My Pets</h2>
+        <div class="services" id="myPets">
+            <p style="color: var(--text-muted);">Loading...</p>
+        </div>
+
+        <h2 style="margin-bottom: 1.5rem; margin-top: 3rem;">My Orders</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTable">
+                <tr>
+                    <td colspan="5" style="text-align:center; color: var(--text-muted);">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Update cart count from localStorage
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+        updateCartCount();
+
+        fetch('/api/client/pets')
+            .then(res => res.json())
+            .then(pets => {
+                const container = document.getElementById('myPets');
+                if (pets.length === 0) {
+                    container.innerHTML = '<p style="color:var(--text-muted)">You have no registered pets.</p>';
+                    return;
+                }
+                container.innerHTML = pets.map(pet => `
+                    <div class="card">
+                        <h3>${pet.name}</h3>
+                        <p>${pet.species} - ${pet.age}</p>
+                    </div>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('myPets').innerHTML = '<p style="color:var(--text-muted);">Error loading pets.</p>';
+            });
+
+        fetch('/api/client/orders')
+            .then(res => res.json())
+            .then(orders => {
+                const tbody = document.getElementById('ordersTable');
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No orders yet. <a href="shop.html">Start shopping!</a></td></tr>';
+                    return;
+                }
+                tbody.innerHTML = orders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.date}</td>
+                        <td>${order.items}</td>
+                        <td>৳${order.total.toFixed(2)}</td>
+                        <td>${order.status}</td>
+                    </tr>
+                `).join('');
+            })
+            .catch(err => {
+                document.getElementById('ordersTable').innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Error loading orders.</td></tr>';
+            });
+    </script>
+</body>
+
+</html>

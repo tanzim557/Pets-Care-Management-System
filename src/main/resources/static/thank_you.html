@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .thank-you-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: bounceIn 0.5s;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-paw"></i> Pets Care</div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop.html">Shop</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="thank-you-container">
+        <div
+            style="background: white; padding: 3rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 600px; width: 90%;">
+            <i class="fa-solid fa-circle-check success-icon" style="color: #10b981;"></i>
+
+            <!-- Dynamic Content Container -->
+            <div id="messageContent">
+                <h1 style="margin-bottom: 1rem; color: #1f2937; font-size: 2rem; font-weight: 700;">Success!</h1>
+                <p style="color: #6b7280; margin-bottom: 2rem; line-height: 1.6;">Process completed successfully.</p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;" id="actionButtons">
+                <!-- Buttons will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Clear cart on successful payment return
+        localStorage.removeItem('cart');
+
+        // Dynamic Content Logic
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type');
+        const contentDiv = document.getElementById('messageContent');
+        const btnDiv = document.getElementById('actionButtons');
+
+        if (type === 'donation') {
+            contentDiv.innerHTML = `
+                <h1 style="margin-bottom: 1rem; color: #e11d48; font-size: 2rem; font-weight: 700;">Thank You for Your Kindness!</h1>
+                <p style="color: #6b7280; margin-bottom: 2rem; line-height: 1.6;">
+                    Your generous donation has been received. <br>Your support helps us save lives and provide better care for our animals.
+                </p>
+            `;
+            btnDiv.innerHTML = `
+                <a href="/adoption.html" class="btn-primary"
+                    style="background: #e11d48; border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease;">
+                    <i class="fa-solid fa-paw"></i> Adopt a Friend
+                </a>
+                <a href="/" class="btn-secondary"
+                    style="background: #f3f4f6; color: #374151; padding: 0.8rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease;">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+            `;
+        } else {
+            // Default to Order Success
+            contentDiv.innerHTML = `
+                <h1 style="margin-bottom: 1rem; color: #1f2937; font-size: 2rem; font-weight: 700;">Order Placed Successfully!</h1>
+                <p style="color: #6b7280; margin-bottom: 2rem; line-height: 1.6;">
+                    Thank you for shopping with Pets Care. Your payment has been processed securely.
+                    We have sent a confirmation email and will notify you via SMS when your order is out for delivery.
+                </p>
+            `;
+            btnDiv.innerHTML = `
+                <a href="/shop.html" class="btn-primary"
+                    style="background: #3b82f6; border: none; padding: 0.8rem 1.5rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.3s ease;">
+                    <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+                </a>
+                <a href="/" class="btn-secondary"
+                    style="background: #f3f4f6; color: #374151; padding: 0.8rem 1.5rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease;">
+                    <i class="fa-solid fa-house"></i> Back to Home
+                </a>
+            `;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Portal - Pets Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo"><i class="fa-solid fa-user-tie"></i> Employee Portal</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Order Management</a></li>
+                <li><a href="/logout" class="btn-login">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <h2 style="margin-bottom: 1.5rem;">Active Orders</h2>
+        <div class="services" id="ordersGrid">
+            <p style="color: var(--text-muted);">Loading orders...</p>
+        </div>
+    </div>
+
+    <script>
+        loadOrders();
+
+        function loadOrders() {
+            fetch('/api/employee/orders/list')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('ordersGrid');
+                    if (data.length === 0) {
+                        grid.innerHTML = '<p style="color:var(--text-muted)">No orders found.</p>';
+                        return;
+                    }
+                    grid.innerHTML = data.map(o => `
+                        <div class="card" style="border-left: 4px solid ${getStatusColor(o.status)};">
+                            <div style="display:flex; justify-content:space-between;">
+                                <h3>Order #${o.id}</h3>
+                                <span style="font-weight:bold; color:${getStatusColor(o.status)}">${o.status}</span>
+                            </div>
+                            <p><strong>Customer:</strong> ${o.customer}</p>
+                            <p><strong>Phone:</strong> ${o.phone}</p>
+                            <p><strong>Address:</strong> ${o.address || 'N/A'}</p>
+                            <p><strong>Total:</strong> ৳${o.total.toFixed(2)}</p>
+                            ${o.tracking ? `<p><strong>Tracking:</strong> ${o.tracking}</p>` : ''}
+                            
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                                <select id="status-${o.id}" style="padding: 0.5rem; border-radius: 0.5rem; background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--glass-border);">
+                                    <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                </select>
+                                <input type="text" id="tracking-${o.id}" placeholder="Tracking #" value="${o.tracking || ''}" style="padding: 0.5rem; width: 120px; margin-left: 0.5rem; border-radius: 0.5rem; background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--glass-border);">
+                                <button onclick="updateStatus(${o.id})" class="btn-login" style="padding: 0.5rem 1rem; font-size: 0.9rem; margin-left: 0.5rem;">Update</button>
+                            </div>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'Pending': return '#f59e0b';
+                case 'Processing': return '#3b82f6';
+                case 'Shipped': return '#8b5cf6';
+                case 'Delivered': return '#22c55e';
+                default: return '#94a3b8';
+            }
+        }
+
+        async function updateStatus(id) {
+            const status = document.getElementById(`status-${id}`).value;
+            const tracking = document.getElementById(`tracking-${id}`).value;
+
+            if (!confirm(`Update Order #${id} to ${status}? Customer will receive SMS.`)) return;
+
+            try {
+                const response = await fetch('/api/employee/orders/update_status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: id.toString(), status, tracking })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✓ Status updated & SMS sent!');
+                    loadOrders();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error updating status');
+            }
+        }
+    </script>
+</body>
+
+</html>

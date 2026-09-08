@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Pets Care Hospital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="logo">
+                <i class="fa-solid fa-hospital"></i> Pets Care Hospital
+                <div id="liveClock" style="font-size: 0.8rem; font-weight: 500; color: #cbd5e1; margin-top: 2px;"></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/aboutus.html">About Us</a></li>
+                    <li><a href="/shop.html">Shop</a></li>
+                    <li><a href="/adoption.html">Adoption</a></li>
+                    <li><a href="/track.html">Track Status</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="about-us" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 6rem 2rem; min-height: 80vh; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-start;">
+        <!-- Background decorative elements -->
+        <div style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: rgba(56, 189, 248, 0.2); border-radius: 50%; filter: blur(50px);"></div>
+        <div style="position: absolute; bottom: 100px; right: -50px; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.15); border-radius: 50%; filter: blur(60px);"></div>
+        
+        <div style="max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
+            
+            <!-- Enhanced Text Section -->
+            <div style="background: white; padding: 4rem 3rem; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); margin-bottom: 4rem;">
+                <h2 style="font-size: 3rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px;">About Us & Our Motive</h2>
+                
+                <p style="color: #475569; font-size: 1.2rem; margin-bottom: 3rem; line-height: 1.8;">
+                    At <strong>Pets Care Hospital</strong>, our motive is driven by deep compassion for all animals. We believe that every pet deserves access to the highest quality medical care, swift emergency rescues, and a loving, nurturing environment. 
+                </p>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 2rem; text-align: center; margin-bottom: 2rem;">
+                    <div style="flex: 1; min-width: 250px; background: #f8fafc; padding: 2rem; border-radius: 1rem; border-top: 4px solid var(--primary);">
+                        <div style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"><i class="fa-solid fa-bullseye"></i></div>
+                        <h4 style="font-size: 1.3rem; color: #1e293b; margin-bottom: 0.5rem;">Our Mission</h4>
+                        <p style="color: #64748b; font-size: 1rem; line-height: 1.6;">To provide state-of-the-art veterinary care and unparalleled compassionate service to our patients. We strive to be the ultimate safety net for vulnerable animals through our 24/7 rescue operations.</p>
+                    </div>
+                    <div style="flex: 1; min-width: 250px; background: #f8fafc; padding: 2rem; border-radius: 1rem; border-top: 4px solid #10b981;">
+                        <div style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;"><i class="fa-solid fa-eye"></i></div>
+                        <h4 style="font-size: 1.3rem; color: #1e293b; margin-bottom: 0.5rem;">Our Vision</h4>
+                        <p style="color: #64748b; font-size: 1rem; line-height: 1.6;">A world where every animal has a loving home and access to top-tier healthcare. We aim to build a community where humans and animals co-exist in perfect harmony, safety, and joy.</p>
+                    </div>
+                </div>
+                
+                <p style="color: #475569; font-size: 1.1rem; line-height: 1.7; font-style: italic;">
+                    "Our dedicated professionals and heroic rescue teams work around the clock—24 hours a day, 7 days a week—to ensure the health, happiness, and safety of your furry friends. Because to us, they are not just pets; they are family."
+                </p>
+            </div>
+            
+            <!-- Accordion Headers -->
+            <h3 onclick="toggleVisibility('publicDoctorGrid')" style="font-size: 1.8rem; color: #1e293b; margin-bottom: 1rem; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: white; padding: 1.5rem 2.5rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)';">
+                <span><i class="fa-solid fa-stethoscope" style="color: var(--primary); margin-right: 10px;"></i> Meet Our Dedicated Doctors</span>
+                <i id="icon-publicDoctorGrid" class="fa-solid fa-chevron-down" style="color:var(--primary); font-size:1.5rem; transition: transform 0.3s;"></i>
+            </h3>
+            <!-- Using flexbox instead of grid to ensure centering when there are few items -->
+            <div id="publicDoctorGrid" style="display:none; padding:2rem 0; margin-bottom: 3rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+                <!-- Doctor cards will be loaded here dynamically -->
+            </div>
+
+            <h3 onclick="toggleVisibility('publicRescueGrid')" style="font-size: 1.8rem; color: #1e293b; margin-bottom: 1rem; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: white; padding: 1.5rem 2.5rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px -1px rgba(0,0,0,0.05)';">
+                <span><i class="fa-solid fa-truck-medical" style="color: #10b981; margin-right: 10px;"></i> Our Heroic Rescue Team</span>
+                <i id="icon-publicRescueGrid" class="fa-solid fa-chevron-down" style="color:#10b981; font-size:1.5rem; transition: transform 0.3s;"></i>
+            </h3>
+            <!-- Using flexbox instead of grid to ensure centering when there are few items -->
+            <div id="publicRescueGrid" style="display:none; padding:2rem 0; margin-bottom: 3rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+                <!-- Rescue cards will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div style="text-align:center; padding:2rem; color:white; background:var(--dark);">
+            <p>&copy; 2026 Pets Care Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function updateClock() {
+            const clock = document.getElementById('liveClock');
+            if (clock) {
+                const now = new Date();
+                const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                clock.textContent = now.toLocaleDateString('en-US', options);
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
+
+        function toggleVisibility(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (el.style.display === 'none') {
+                el.style.display = 'flex';
+                if(icon) icon.className = "fa-solid fa-chevron-up";
+            } else {
+                el.style.display = 'none';
+                if(icon) icon.className = "fa-solid fa-chevron-down";
+            }
+        }
+
+        function loadPublicAboutUsData() {
+            // Load Doctors
+            fetch('/api/admin/doctor')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('publicDoctorGrid');
+                    if(grid) {
+                        if (data.length === 0) {
+                            grid.innerHTML = '<div style="width:100%; text-align:center; padding: 2rem;">No doctors available yet.</div>';
+                        } else {
+                            grid.innerHTML = data.map(d => `
+                                <div class="card" style="text-align:left; flex: 1 1 300px; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                                    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                                        ${d.photo ? `<img src="${d.photo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary);">` : '<div style="width:70px; height:70px; background:#e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:1.5rem;"><i class="fa-solid fa-user-doctor"></i></div>'}
+                                        <div>
+                                            <h3 style="margin:0; font-size:1.2rem; color: #1e293b;">${d.firstName} ${d.lastName}</h3>
+                                            <span class="badge badge-info" style="margin-top:0.5rem; display:inline-block;">${d.specialty}</span>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1" style="color: #64748b;"><i class="fa-solid fa-phone" style="color:var(--primary); width:20px;"></i> ${d.phone}</p>
+                                    <p class="mb-1" style="color: #64748b;"><i class="fa-solid fa-map-marker-alt" style="color:var(--primary); width:20px;"></i> ${d.location || 'Not Specified'}</p>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                }).catch(err => console.error('Error loading public doctors:', err));
+
+            // Load Rescue Team
+            fetch('/api/admin/rescue_list')
+                .then(res => res.json())
+                .then(data => {
+                    const grid = document.getElementById('publicRescueGrid');
+                    if(grid) {
+                        if (data.length === 0) {
+                            grid.innerHTML = '<div style="width:100%; text-align:center; padding: 2rem;">No rescue team members available yet.</div>';
+                        } else {
+                            grid.innerHTML = data.map(r => `
+                                <div class="card" style="text-align:left; flex: 1 1 300px; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                                    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+                                        ${r.photo ? `<img src="${r.photo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #10b981;">` : '<div style="width:70px; height:70px; background:#e2e8f0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:1.5rem;"><i class="fa-solid fa-truck-medical"></i></div>'}
+                                        <div>
+                                            <h3 style="margin:0; font-size:1.2rem; color: #1e293b;">${r.firstName} ${r.lastName}</h3>
+                                            <span class="badge badge-success" style="margin-top:0.5rem; display:inline-block;">${r.status}</span>
+                                        </div>
+                                    </div>
+                                    <p class="mb-1" style="color: #64748b;"><i class="fa-solid fa-phone" style="color:#10b981; width:20px;"></i> ${r.phone}</p>
+                                    <p class="mb-1" style="color: #64748b;"><i class="fa-solid fa-location-dot" style="color:#10b981; width:20px;"></i> ${r.location}</p>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                }).catch(err => console.error('Error loading public rescue team:', err));
+        }
+        
+        // Call it when page loads
+        document.addEventListener('DOMContentLoaded', loadPublicAboutUsData);
+    </script>
+</body>
+</html>
